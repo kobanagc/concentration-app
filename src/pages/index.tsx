@@ -13,7 +13,7 @@ export default function Home() {
       <div className={styles.container}>
         <h1 className={styles.title}>Concentration Game</h1>
         <Link href="/config">
-          <div className={styles.button}>設定</div>
+          <div className={styles.button}>Start</div>
         </Link>
       </div>
     </>
