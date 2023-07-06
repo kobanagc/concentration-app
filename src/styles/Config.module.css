@@ -1,0 +1,44 @@
+.settings {
+  padding: 20px;
+}
+
+.title {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.subtitle {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.input {
+  width: 50px;
+}
+
+.checkbox {
+  margin-left: 10px;
+}
+
+.fileInput {
+  margin-bottom: 10px;
+}
+
+.button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: #0056b3;
+}
