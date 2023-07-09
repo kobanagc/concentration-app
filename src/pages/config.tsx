@@ -1,6 +1,6 @@
-import Head from 'next/head'
-import styles from '@/styles/Config.module.css'
-
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import styles from '@/styles/Config.module.css';
 import { useState } from 'react';
 
 const Config = () => {
@@ -9,6 +9,7 @@ const Config = () => {
   const [numCards, setNumCards] = useState(20);
   const [playerNames, setPlayerNames] = useState<string[]>(Array(numPlayers).fill(''));
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
+  const router = useRouter();
 
   const handleNumPlayersChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(event.target.value);
@@ -35,7 +36,16 @@ const Config = () => {
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    // フォームのデータを使用してプレイ画面に遷移する処理を追加
+    // プレイ画面に遷移する処理を追加
+    const formData = {
+      numPlayers,
+      includeJoker,
+      numCards,
+      playerNames,
+      selectedImages,
+    };
+    localStorage.setItem('gameData', JSON.stringify(formData));
+    router.push('/game');
   };
 
   return (
@@ -50,17 +60,35 @@ const Config = () => {
         <form onSubmit={handleSubmit}>
           <label>
             Number of Players:
-            <input type="number" value={numPlayers} onChange={handleNumPlayersChange} min="2" max="10" className={styles.input} />
+            <input
+              type="number"
+              value={numPlayers}
+              onChange={handleNumPlayersChange}
+              min="2"
+              max="10"
+              className={styles.input}
+            />
           </label>
 
           <label>
             Include Joker:
-            <input type="checkbox" checked={includeJoker} onChange={() => setIncludeJoker(!includeJoker)} className={styles.checkbox} />
+            <input
+              type="checkbox"
+              checked={includeJoker}
+              onChange={() => setIncludeJoker(!includeJoker)}
+              className={styles.checkbox}
+            />
           </label>
 
           <label>
-            Number of Cards:
-            <input type="number" value={numCards} onChange={(event) => setNumCards(parseInt(event.target.value))} min="10" className={styles.input} />
+            Number of Pairs:
+            <input
+              type="number"
+              value={numCards}
+              onChange={(event) => setNumCards(parseInt(event.target.value))}
+              min="10"
+              className={styles.input}
+            />
           </label>
 
           <h2 className={styles.subtitle}>Player Names:</h2>
@@ -78,9 +106,17 @@ const Config = () => {
           ))}
 
           <h2 className={styles.subtitle}>Card Images:</h2>
-          <input type="file" accept="image/*" multiple onChange={handleImageUpload} className={styles.fileInput} />
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={handleImageUpload}
+            className={styles.fileInput}
+          />
 
-          <button type="submit" className={styles.button}>Start Game</button>
+          <button type="submit" className={styles.button}>
+            Start Game
+          </button>
         </form>
       </div>
     </>
