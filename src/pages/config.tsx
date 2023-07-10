@@ -2,6 +2,8 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import styles from '@/styles/Config.module.css';
 import { useState } from 'react';
+import fs from 'fs';
+import path from 'path';
 
 const Config = () => {
   const [numPlayers, setNumPlayers] = useState(2);

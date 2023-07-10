@@ -1,6 +1,8 @@
 import Head from 'next/head'
 import { useEffect, useState } from 'react';
 import styles from '@/styles/Game.module.css';
+import fs from 'fs';
+import path from 'path';
 
 const Game = () => {
   const [playerNames, setPlayerNames] = useState<string[]>([]);
