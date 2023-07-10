@@ -50,7 +50,7 @@ const Config = () => {
     const formData = {
       numPlayers,
       includeJoker,
-      numPairs,
+      numPairs: selectedImages.length === 0 ? 20 : numPairs,
       playerNames,
       selectedImages,
     };
@@ -133,6 +133,9 @@ const Config = () => {
             Start Game
           </button>
           {uploadError && <p className={styles.error}>{uploadError}</p>}
+          {selectedImages.length === 0 && (
+            <p className={styles.info}>画像がアップロードされなければペア数は20枚として設定されます。</p>
+          )}
         </form>
       </div>
     </>
