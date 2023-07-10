@@ -1,9 +1,7 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import styles from '@/styles/Config.module.css';
-import { useState } from 'react';
-import fs from 'fs';
-import path from 'path';
+import { useState, useEffect } from 'react';
 
 const Config = () => {
   const [numPlayers, setNumPlayers] = useState(2);
@@ -11,7 +9,17 @@ const Config = () => {
   const [numPairs, setNumPairs] = useState(20);
   const [playerNames, setPlayerNames] = useState<string[]>(Array(numPlayers).fill(''));
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
+  const [uploadError, setUploadError] = useState<string>('');
   const router = useRouter();
+
+  useEffect(() => {
+    // ファイルのアップロード数が制限を超えた場合、Start Gameボタンを非活性にする
+    if (selectedImages.length !== 0 && selectedImages.length !== getValidUploadCount()) {
+      setUploadError(`ファイルをアップロードする場合は ${getValidUploadCount()} 枚をアップロードしてください。`);
+    } else {
+      setUploadError('');
+    }
+  }, [selectedImages, includeJoker, numPairs]);
 
   const handleNumPlayersChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(event.target.value);
@@ -48,6 +56,11 @@ const Config = () => {
     };
     localStorage.setItem('gameData', JSON.stringify(formData));
     router.push('/game');
+  };
+
+  // ファイルのアップロード数の制限を取得する関数
+  const getValidUploadCount = (): number => {
+    return includeJoker ? numPairs + 1 : numPairs;
   };
 
   return (
@@ -116,9 +129,10 @@ const Config = () => {
             className={styles.fileInput}
           />
 
-          <button type="submit" className={styles.button}>
+          <button type="submit" className={styles.button} disabled={uploadError !== ''}>
             Start Game
           </button>
+          {uploadError && <p className={styles.error}>{uploadError}</p>}
         </form>
       </div>
     </>
