@@ -8,7 +8,7 @@ import path from 'path';
 const Config = () => {
   const [numPlayers, setNumPlayers] = useState(2);
   const [includeJoker, setIncludeJoker] = useState(false);
-  const [numCards, setNumCards] = useState(20);
+  const [numPairs, setNumPairs] = useState(20);
   const [playerNames, setPlayerNames] = useState<string[]>(Array(numPlayers).fill(''));
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const router = useRouter();
@@ -42,7 +42,7 @@ const Config = () => {
     const formData = {
       numPlayers,
       includeJoker,
-      numCards,
+      numPairs,
       playerNames,
       selectedImages,
     };
@@ -86,8 +86,8 @@ const Config = () => {
             Number of Pairs:
             <input
               type="number"
-              value={numCards}
-              onChange={(event) => setNumCards(parseInt(event.target.value))}
+              value={numPairs}
+              onChange={(event) => setNumPairs(parseInt(event.target.value))}
               min="10"
               className={styles.input}
             />
