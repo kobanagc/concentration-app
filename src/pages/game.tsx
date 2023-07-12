@@ -8,6 +8,9 @@ const Game = () => {
   const [includeJoker, setIncludeJoker] = useState<boolean>(false);
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState<number>(0);
+  const [flippedCards, setFlippedCards] = useState<number[]>([]);
+  const [matchedCards, setMatchedCards] = useState<number[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     // ゲームデータをローカルストレージから取得
@@ -21,43 +24,59 @@ const Game = () => {
     }
   }, []);
 
-  // カードの画像ファイルパスを生成する関数
   const getCardImagePath = (index: number): string => {
     const cardNumber = includeJoker ? index + 1 : index % pairs + 1;
     return `/card${cardNumber}.png`;
   };
 
-  // カードのめくられた後の状態を表すステート
-  const [flippedCards, setFlippedCards] = useState<number[]>([]);
-
-  // プレイヤーの得点を表すステート
-  const [playerScores, setPlayerScores] = useState<number[]>(Array(playerNames.length).fill(0));
-
-  // カードをめくるアクション
   const flipCard = (index: number) => {
-    // 既にめくられたカードの場合は何もしない
+    if (matchedCards.includes(index)) {
+      return;
+    }
+
+    if (flippedCards.length === 2) {
+      return;
+    }
+
     if (flippedCards.includes(index)) {
       return;
     }
 
-    // カードのめくられた状態を更新
     setFlippedCards((prevCards) => [...prevCards, index]);
 
-    // 次のプレイヤーの順番に移動
-    setCurrentPlayerIndex((prevIndex) => (prevIndex + 1) % playerNames.length);
+    if (flippedCards.length === 1) {
+      const firstCardIndex = flippedCards[0];
+      if (selectedImages[firstCardIndex] === selectedImages[index]) {
+        const currentPlayerScore = playerScores[currentPlayerIndex];
+        const updatedScores = [...playerScores];
+        updatedScores[currentPlayerIndex] = currentPlayerScore + 1;
+        setPlayerScores(updatedScores);
+        setMatchedCards((prevCards) => [...prevCards, firstCardIndex, index]);
+        setFlippedCards([]);
+      } else {
+        setIsModalOpen(true);
+        setTimeout(() => {
+          setFlippedCards([]);
+          setIsModalOpen(false);
+          setCurrentPlayerIndex((prevIndex) => (prevIndex + 1) % playerNames.length);
+        }, 2000);
+      }
+    }
+  };
 
-    // カードの絵柄を取得
-    const cardImage = selectedImages[index];
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
-    // プレイヤーの得点をチェック
-    const flippedIndices = flippedCards.concat(index);
-    const sameFlippedIndices = flippedIndices.filter((i) => selectedImages[i] === cardImage);
-    if (sameFlippedIndices.length === 2) {
-      // 同じ絵柄のカードがめくられた場合、得点をプレイヤーに加算
-      const currentPlayerScore = playerScores[currentPlayerIndex];
-      const updatedScores = [...playerScores];
-      updatedScores[currentPlayerIndex] = currentPlayerScore + 1;
-      setPlayerScores(updatedScores);
+  const [playerScores, setPlayerScores] = useState<number[]>(Array(playerNames.length).fill(0));
+
+  const getScoreText = (score: number): string => {
+    if (score === undefined) {
+      return '0 pair';
+    } else if (score === 1) {
+      return `${score} pair`;
+    } else {
+      return `${score} pairs`;
     }
   };
 
@@ -77,21 +96,33 @@ const Game = () => {
         <div className={styles.playerNames}>
           <h2>Player Names:</h2>
           {playerNames.map((name, index) => (
-            <p key={index}>Player {index + 1}: {name} (Score: {playerScores[index]})</p>
+            <p key={index}>
+              Player {index + 1}: {name} (Score: {getScoreText(playerScores[index])})
+            </p>
           ))}
         </div>
         <div className={styles.cardGrid}>
-          {Array(pairs * 2).fill(0).map((_, index) => {
-            const isFlipped = flippedCards.includes(index);
-            const imagePath = isFlipped ? getCardImagePath(index) : '/mark_question.png';
+          {Array(pairs * 2)
+            .fill(0)
+            .map((_, index) => {
+              const isFlipped = flippedCards.includes(index);
+              const isMatched = matchedCards.includes(index);
+              const imagePath = isFlipped || isMatched ? getCardImagePath(index) : '/mark_question.png';
 
-            return (
-              <div key={index} className={styles.card} onClick={() => flipCard(index)}>
-                <img src={imagePath} alt="Card" className={isFlipped ? styles.flipped : ''} />
-              </div>
-            );
-          })}
+              return (
+                <div key={index} className={styles.card} onClick={() => flipCard(index)}>
+                  <img src={imagePath} alt="Card" className={isFlipped ? styles.flipped : ''} />
+                </div>
+              );
+            })}
         </div>
+        {isModalOpen && (
+          <div className={styles.modal}>
+            <div className={styles.modalContent}>
+              <p>カードが違います。カードを戻します。</p>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );
