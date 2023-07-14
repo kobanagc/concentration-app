@@ -47,10 +47,6 @@ const Game = () => {
     if (flippedCards.length === 1) {
       const firstCardIndex = flippedCards[0];
       if (selectedImages[firstCardIndex] === selectedImages[index]) {
-        const currentPlayerScore = playerScores[currentPlayerIndex];
-        const updatedScores = [...playerScores];
-        updatedScores[currentPlayerIndex] = currentPlayerScore + 1;
-        setPlayerScores(updatedScores);
         setMatchedCards((prevCards) => [...prevCards, firstCardIndex, index]);
         setFlippedCards([]);
       } else {
@@ -58,7 +54,12 @@ const Game = () => {
         setTimeout(() => {
           setFlippedCards([]);
           setIsModalOpen(false);
-          setCurrentPlayerIndex((prevIndex) => (prevIndex + 1) % playerNames.length);
+          const nextPlayerIndex = (currentPlayerIndex + 1) % playerNames.length;
+          setCurrentPlayerIndex(nextPlayerIndex);
+          if (flippedCards.length === 1) {
+            setFlippedCards([]);
+            setCurrentPlayerIndex(nextPlayerIndex);
+          }
         }, 2000);
       }
     }
