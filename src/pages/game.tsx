@@ -24,8 +24,13 @@ const Game = () => {
     }
   }, []);
 
-  const getCardImagePath = (index: number): string => {
-    const cardNumber = includeJoker ? index + 1 : index % pairs + 1;
+  const generateCardId = (index: number): number => {
+    // カードIDを生成するロジック（例：1からpairsまでの連番）
+    return index % pairs + 1;
+  };
+
+  const getCardImagePath = (cardId: number): string => {
+    const cardNumber = includeJoker ? cardId + 1 : cardId;
     return `/card${cardNumber}.png`;
   };
 
@@ -46,11 +51,16 @@ const Game = () => {
 
     if (flippedCards.length === 1) {
       const firstCardIndex = flippedCards[0];
-      if (selectedImages[firstCardIndex] === selectedImages[index]) {
+      const firstCardId = generateCardId(firstCardIndex);
+      const currentCardId = generateCardId(index);
+
+      if (firstCardId === currentCardId) {
         setMatchedCards((prevCards) => [...prevCards, firstCardIndex, index]);
         setFlippedCards([]);
-        const nextPlayerIndex = (currentPlayerIndex + 1) % playerNames.length;
-        setCurrentPlayerIndex(nextPlayerIndex);
+        // スコアを更新
+        const newPlayerScores = [...playerScores];
+        newPlayerScores[currentPlayerIndex]++;
+        setPlayerScores(newPlayerScores);
       } else {
         setFlippedCards([]);
         setIsModalOpen(true); // モーダルを表示する
@@ -114,7 +124,8 @@ const Game = () => {
             .map((_, index) => {
               const isFlipped = flippedCards.includes(index);
               const isMatched = matchedCards.includes(index);
-              const imagePath = isFlipped || isMatched ? getCardImagePath(index) : '/mark_question.png';
+              const cardId = generateCardId(index);
+              const imagePath = isFlipped || isMatched ? getCardImagePath(cardId) : '/mark_question.png';
 
               return (
                 <div key={index} className={styles.card} onClick={() => flipCard(index)}>
