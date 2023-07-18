@@ -52,8 +52,10 @@ const Game = () => {
         const nextPlayerIndex = (currentPlayerIndex + 1) % playerNames.length;
         setCurrentPlayerIndex(nextPlayerIndex);
       } else {
+        setFlippedCards([]);
+        setIsModalOpen(true); // モーダルを表示する
         setTimeout(() => {
-          setFlippedCards([]);
+          setIsModalOpen(false); // モーダルを非表示にする
           const nextPlayerIndex = (currentPlayerIndex + 1) % playerNames.length;
           setCurrentPlayerIndex(nextPlayerIndex);
         }, 2000);
@@ -98,6 +100,14 @@ const Game = () => {
             </p>
           ))}
         </div>
+        {isModalOpen && (
+          <div className={styles.modal}>
+            <div className={styles.modalContent}>
+              <p>カードが違います。カードを戻します。</p>
+              <button onClick={closeModal}>カードを戻す</button>
+            </div>
+          </div>
+        )}
         <div className={styles.cardGrid}>
           {Array(pairs * 2)
             .fill(0)
@@ -113,13 +123,6 @@ const Game = () => {
               );
             })}
         </div>
-        {isModalOpen && (
-          <div className={styles.modal}>
-            <div className={styles.modalContent}>
-              <p>カードが違います。カードを戻します。</p>
-            </div>
-          </div>
-        )}
       </div>
     </>
   );
