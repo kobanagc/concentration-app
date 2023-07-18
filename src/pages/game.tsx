@@ -49,17 +49,13 @@ const Game = () => {
       if (selectedImages[firstCardIndex] === selectedImages[index]) {
         setMatchedCards((prevCards) => [...prevCards, firstCardIndex, index]);
         setFlippedCards([]);
+        const nextPlayerIndex = (currentPlayerIndex + 1) % playerNames.length;
+        setCurrentPlayerIndex(nextPlayerIndex);
       } else {
-        setIsModalOpen(true);
         setTimeout(() => {
           setFlippedCards([]);
-          setIsModalOpen(false);
           const nextPlayerIndex = (currentPlayerIndex + 1) % playerNames.length;
           setCurrentPlayerIndex(nextPlayerIndex);
-          if (flippedCards.length === 1) {
-            setFlippedCards([]);
-            setCurrentPlayerIndex(nextPlayerIndex);
-          }
         }, 2000);
       }
     }
