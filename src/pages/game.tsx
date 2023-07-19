@@ -80,7 +80,7 @@ const Game = () => {
   const [playerScores, setPlayerScores] = useState<number[]>(Array(playerNames.length).fill(0));
 
   const getScoreText = (score: number): string => {
-    if (score === undefined) {
+    if (score === 0) {
       return '0 pair';
     } else if (score === 1) {
       return `${score} pair`;
