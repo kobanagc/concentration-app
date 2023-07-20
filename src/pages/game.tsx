@@ -62,13 +62,13 @@ const Game = () => {
         newPlayerScores[currentPlayerIndex]++;
         setPlayerScores(newPlayerScores);
       } else {
-        setFlippedCards([]);
         setIsModalOpen(true); // モーダルを表示する
       }
     }
   };
 
   const closeModal = () => {
+    setFlippedCards([]);
     setIsModalOpen(false);
     const nextPlayerIndex = (currentPlayerIndex + 1) % playerNames.length;
     setCurrentPlayerIndex(nextPlayerIndex);
