@@ -64,17 +64,14 @@ const Game = () => {
       } else {
         setFlippedCards([]);
         setIsModalOpen(true); // モーダルを表示する
-        setTimeout(() => {
-          setIsModalOpen(false); // モーダルを非表示にする
-          const nextPlayerIndex = (currentPlayerIndex + 1) % playerNames.length;
-          setCurrentPlayerIndex(nextPlayerIndex);
-        }, 2000);
       }
     }
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
+    const nextPlayerIndex = (currentPlayerIndex + 1) % playerNames.length;
+    setCurrentPlayerIndex(nextPlayerIndex);
   };
 
   const [playerScores, setPlayerScores] = useState<number[]>(Array(playerNames.length).fill(0));
