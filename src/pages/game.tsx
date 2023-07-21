@@ -11,6 +11,7 @@ const Game = () => {
   const [flippedCards, setFlippedCards] = useState<number[]>([]);
   const [matchedCards, setMatchedCards] = useState<number[]>([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [playerScores, setPlayerScores] = useState<number[]>(Array(playerNames.length).fill(0));
 
   useEffect(() => {
     // ゲームデータをローカルストレージから取得
@@ -74,8 +75,6 @@ const Game = () => {
     setCurrentPlayerIndex(nextPlayerIndex);
   };
 
-  const [playerScores, setPlayerScores] = useState<number[]>(Array(playerNames.length).fill(0));
-
   const getScoreText = (score: number): string => {
     if (score === 0) {
       return '0 pair';
@@ -110,7 +109,7 @@ const Game = () => {
         {isModalOpen && (
           <div className={styles.modal}>
             <div className={styles.modalContent}>
-              <p>カードが違います。カードを戻します。</p>
+              <p>ざんね〜んm9(^Д^)</p>
               <button onClick={closeModal}>カードを戻す</button>
             </div>
           </div>
