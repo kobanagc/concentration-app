@@ -11,7 +11,7 @@ const Game = () => {
   const [flippedCards, setFlippedCards] = useState<number[]>([]);
   const [matchedCards, setMatchedCards] = useState<number[]>([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [playerScores, setPlayerScores] = useState<number[]>(Array(playerNames.length).fill(0));
+  const [playerScores, setPlayerScores] = useState<number[]>([]);
 
   useEffect(() => {
     // ゲームデータをローカルストレージから取得
@@ -24,6 +24,11 @@ const Game = () => {
       setSelectedImages(selectedImages.map((file: File) => URL.createObjectURL(file)));
     }
   }, []);
+
+  useEffect(() => {
+    // playerNamesが入った状態でplayerScoresを初期化
+    setPlayerScores(Array(playerNames.length).fill(0));
+  }, [playerNames]);
 
   const generateCardId = (index: number): number => {
     // カードIDを生成するロジック（例：1からpairsまでの連番）
