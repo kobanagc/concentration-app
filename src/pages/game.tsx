@@ -93,7 +93,6 @@ const Game = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <div className={styles.game}>
-        <h1>Game Screen</h1>
         <div className={styles.currentPlayer}>
           <h2>Current Player:</h2>
           <p>{playerNames[currentPlayerIndex]}</p>
