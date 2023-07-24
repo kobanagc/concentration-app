@@ -13,6 +13,7 @@ const Game = () => {
   const [matchedCards, setMatchedCards] = useState<number[]>([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [playerScores, setPlayerScores] = useState<number[]>([]);
+  const [scoreDisplay, setScoreDisplay] = useState<boolean>(true);
 
   useEffect(() => {
     // ゲームデータをローカルストレージから取得
@@ -82,6 +83,9 @@ const Game = () => {
   };
 
   const getScoreText = (score: number): string => {
+    if (scoreDisplay === false) {
+      return '???';
+    }
     if (score === 0) {
       return '0 pair';
     } else if (score === 1) {
@@ -89,6 +93,10 @@ const Game = () => {
     } else {
       return `${score} pairs`;
     }
+  };
+
+  const changeScoreDisplay = () => {
+    setScoreDisplay((prevDisplay) => !prevDisplay);
   };
 
   return (
@@ -110,6 +118,11 @@ const Game = () => {
               Player {index + 1}: {name} (Score: {getScoreText(playerScores[index])})
             </p>
           ))}
+        </div>
+        <div>
+          <button onClick={changeScoreDisplay}>
+            {scoreDisplay ? 'スコアを隠す' : 'スコアを表示する'}
+          </button>
         </div>
         {isModalOpen && (
           <div className={styles.modal}>
