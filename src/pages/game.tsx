@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import Head from 'next/head';
+import Image from 'next/image';
 import styles from '@/styles/Game.module.css';
 
 const Game = () => {
@@ -129,7 +130,13 @@ const Game = () => {
 
               return (
                 <div key={index} className={styles.card} onClick={() => flipCard(index)}>
-                  <img src={imagePath} alt="Card" className={isFlipped ? styles.flipped : ''} />
+                  <Image
+                    src={imagePath}
+                    alt="Card"
+                    className={isFlipped ? styles.flipped : ''}
+                    width={100}
+                    height={150}
+                  />
                 </div>
               );
             })}
