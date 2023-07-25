@@ -46,15 +46,12 @@ const Game = () => {
     if (matchedCards.includes(index)) {
       return;
     }
-
     if (flippedCards.length === 2) {
       return;
     }
-
     if (flippedCards.includes(index)) {
       return;
     }
-
     setFlippedCards((prevCards) => [...prevCards, index]);
 
     if (flippedCards.length === 1) {
