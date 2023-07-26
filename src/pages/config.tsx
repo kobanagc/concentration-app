@@ -4,10 +4,10 @@ import styles from '@/styles/Config.module.css';
 import { useState, useEffect } from 'react';
 
 const Config = () => {
-  const [numPlayers, setNumPlayers] = useState(2);
-  const [includeJoker, setIncludeJoker] = useState(false);
-  const [numPairs, setNumPairs] = useState(20);
-  const [playerNames, setPlayerNames] = useState<string[]>(Array(numPlayers).fill(''));
+  const [numPlayers, setNumPlayers] = useState<number>(2);
+  const [includeJoker, setIncludeJoker] = useState<boolean>(false);
+  const [numPairs, setNumPairs] = useState<number>(20);
+  const [playerNames, setPlayerNames] = useState<string[]>(numPlayers ? Array(numPlayers).fill('') : []);
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [uploadError, setUploadError] = useState<string>('');
   const router = useRouter();
@@ -24,7 +24,7 @@ const Config = () => {
   const handleNumPlayersChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(event.target.value);
     setNumPlayers(value);
-    setPlayerNames(Array(value).fill(''));
+    setPlayerNames(value ? Array(value).fill('') : []);
   };
 
   const handlePlayerNameChange = (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,7 +55,13 @@ const Config = () => {
       selectedImages,
     };
     localStorage.setItem('gameData', JSON.stringify(formData));
-    router.push('/game');
+
+    if (numPlayers <= 2 ) {
+      router.push('/game');
+    } else {
+      alert('プレイヤー数は2人以上を選択してください。');
+      return;
+    }
   };
 
   // ファイルのアップロード数の制限を取得する関数
