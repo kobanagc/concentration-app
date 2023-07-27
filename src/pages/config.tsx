@@ -56,7 +56,7 @@ const Config = () => {
     };
     localStorage.setItem('gameData', JSON.stringify(formData));
 
-    if (numPlayers <= 2 ) {
+    if (numPlayers >= 2 ) {
       router.push('/game');
     } else {
       alert('プレイヤー数は2人以上を選択してください。');
