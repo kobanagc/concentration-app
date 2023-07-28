@@ -24,7 +24,16 @@ const Config = () => {
   const handleNumPlayersChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(event.target.value);
     setNumPlayers(value);
-    setPlayerNames(value ? Array(value).fill('') : []);
+
+    setPlayerNames((prevNames) => {
+      if (value > prevNames.length) {
+        const newNames = [...prevNames, ...Array(value - prevNames.length).fill('')];
+        return newNames;
+      } else {
+        const newNames = prevNames.slice(0, value);
+        return newNames;
+      }
+    });
   };
 
   const handlePlayerNameChange = (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
