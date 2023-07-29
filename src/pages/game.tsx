@@ -14,6 +14,7 @@ const Game = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [playerScores, setPlayerScores] = useState<number[]>([]);
   const [scoreDisplay, setScoreDisplay] = useState<boolean>(true);
+  const [cardIds, setCardIds] = useState<number[]>([]);
 
   useEffect(() => {
     // ゲームデータをローカルストレージから取得
@@ -32,6 +33,10 @@ const Game = () => {
     setPlayerScores(Array(playerNames.length).fill(0));
   }, [playerNames]);
 
+  useEffect(() => {
+    setCardIds(shuffleArray(Array(pairs * 2).fill(0).map((_, index) => generateCardId(index))));
+  }, [pairs]);
+
   const generateCardId = (index: number): number => {
     // カードIDを生成するロジック（例：1からpairsまでの連番）
     return index % pairs + 1;
@@ -41,6 +46,15 @@ const Game = () => {
     const cardNumber = includeJoker ? cardId + 1 : cardId;
     return `/card${cardNumber}.png`;
   };
+
+  function shuffleArray<T>(array: T[]): T[] {
+    const result = [...array];
+    for (let i = result.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [result[i], result[j]] = [result[j], result[i]];
+    }
+    return result;
+  }
 
   const flipCard = (index: number) => {
     if (matchedCards.includes(index)) {
@@ -56,8 +70,8 @@ const Game = () => {
 
     if (flippedCards.length === 1) {
       const firstCardIndex = flippedCards[0];
-      const firstCardId = generateCardId(firstCardIndex);
-      const currentCardId = generateCardId(index);
+      const firstCardId = cardIds[firstCardIndex];
+      const currentCardId = cardIds[index];
 
       if (firstCardId === currentCardId) {
         setMatchedCards((prevCards) => [...prevCards, firstCardIndex, index]);
@@ -130,27 +144,24 @@ const Game = () => {
           </div>
         )}
         <div className={styles.cardGrid}>
-          {Array(pairs * 2)
-            .fill(0)
-            .map((_, index) => {
-              const isFlipped = flippedCards.includes(index);
-              const isMatched = matchedCards.includes(index);
-              const cardId = generateCardId(index);
-              const imagePath = isFlipped || isMatched ? getCardImagePath(cardId) : '/mark_question.png';
+  {cardIds.map((cardId, index) => {
+    const isFlipped = flippedCards.includes(index);
+    const isMatched = matchedCards.includes(index);
+    const imagePath = isFlipped || isMatched ? getCardImagePath(cardId) : '/mark_question.png';
 
-              return (
-                <div key={index} className={styles.card} onClick={() => flipCard(index)}>
-                  <Image
-                    src={imagePath}
-                    alt="Card"
-                    className={isFlipped ? styles.flipped : ''}
-                    width={100}
-                    height={150}
-                  />
-                </div>
-              );
-            })}
-        </div>
+    return (
+      <div key={index} className={styles.card} onClick={() => flipCard(index)}>
+        <Image
+          src={imagePath}
+          alt="Card"
+          className={isFlipped ? styles.flipped : ''}
+          width={100}
+          height={150}
+        />
+      </div>
+    );
+  })}
+</div>
       </div>
     </>
   );
