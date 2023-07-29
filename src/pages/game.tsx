@@ -126,7 +126,7 @@ const Game = () => {
           <h2>Player Names:</h2>
           {playerNames.map((name, index) => (
             <p key={index}>
-              Player {index + 1}: {name} (Score: {getScoreText(playerScores[index])})
+              {name} (Score: {getScoreText(playerScores[index])})
             </p>
           ))}
         </div>
