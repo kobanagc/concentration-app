@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
 import styles from '@/styles/Game.module.css';
+import Link from 'next/link'
 
 const Game = () => {
   const [playerNames, setPlayerNames] = useState<string[]>([]);
@@ -11,7 +12,8 @@ const Game = () => {
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState<number>(0);
   const [flippedCards, setFlippedCards] = useState<number[]>([]);
   const [matchedCards, setMatchedCards] = useState<number[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isMismatchModalOpen, setIsMismatchModalOpen] = useState<boolean>(false);
+  const [isEndModalOpen, setIsEndModalOpen] = useState<boolean>(false);
   const [playerScores, setPlayerScores] = useState<number[]>([]);
   const [scoreDisplay, setScoreDisplay] = useState<boolean>(true);
   const [cardIds, setCardIds] = useState<number[]>([]);
@@ -36,6 +38,12 @@ const Game = () => {
   useEffect(() => {
     setCardIds(shuffleArray(Array(pairs * 2).fill(0).map((_, index) => generateCardId(index))));
   }, [pairs]);
+
+  useEffect(() => {
+    if (matchedCards.length === pairs * 2) {
+      setIsEndModalOpen(true);
+    }
+  }, [matchedCards, pairs]);
 
   const generateCardId = (index: number): number => {
     // カードIDを生成するロジック（例：1からpairsまでの連番）
@@ -81,14 +89,14 @@ const Game = () => {
         newPlayerScores[currentPlayerIndex]++;
         setPlayerScores(newPlayerScores);
       } else {
-        setIsModalOpen(true); // モーダルを表示する
+        setIsMismatchModalOpen(true); // モーダルを表示する
       }
     }
   };
 
-  const closeModal = () => {
+  const closeMismatchModal = () => {
     setFlippedCards([]);
-    setIsModalOpen(false);
+    setIsMismatchModalOpen(false);
     const nextPlayerIndex = (currentPlayerIndex + 1) % playerNames.length;
     setCurrentPlayerIndex(nextPlayerIndex);
   };
@@ -108,6 +116,17 @@ const Game = () => {
 
   const changeScoreDisplay = () => {
     setScoreDisplay((prevDisplay) => !prevDisplay);
+  };
+
+  const resetGame = () => {
+    const newCardIds = shuffleArray(Array(pairs * 2).fill(0).map((_, index) => generateCardId(index)));
+    setCardIds(newCardIds);
+    setCurrentPlayerIndex(0);
+    setFlippedCards([]);
+    setMatchedCards([]);
+    setPlayerScores(Array(playerNames.length).fill(0));
+    setIsMismatchModalOpen(false);
+    setIsEndModalOpen(false);
   };
 
   return (
@@ -135,33 +154,44 @@ const Game = () => {
             {scoreDisplay ? 'スコアを隠す' : 'スコアを表示する'}
           </button>
         </div>
-        {isModalOpen && (
+        {isMismatchModalOpen && (
           <div className={styles.modal}>
             <div className={styles.modalContent}>
               <p>ざんね〜んm9(^Д^)</p>
-              <button onClick={closeModal}>カードを戻す</button>
+              <button onClick={closeMismatchModal}>カードを戻す</button>
+            </div>
+          </div>
+        )}
+        {isEndModalOpen && (
+          <div className={styles.modal}>
+            <div className={styles.modalContent}>
+              <h2>Winner: {playerNames[playerScores.indexOf(Math.max(...playerScores))]}</h2>
+              <button onClick={resetGame}>同じ設定で遊ぶ</button>
+              <Link href="/config">
+                <button>設定を変更する</button>
+              </Link>
             </div>
           </div>
         )}
         <div className={styles.cardGrid}>
-  {cardIds.map((cardId, index) => {
-    const isFlipped = flippedCards.includes(index);
-    const isMatched = matchedCards.includes(index);
-    const imagePath = isFlipped || isMatched ? getCardImagePath(cardId) : '/mark_question.png';
+          {cardIds.map((cardId, index) => {
+            const isFlipped = flippedCards.includes(index);
+            const isMatched = matchedCards.includes(index);
+            const imagePath = isFlipped || isMatched ? getCardImagePath(cardId) : '/mark_question.png';
 
-    return (
-      <div key={index} className={styles.card} onClick={() => flipCard(index)}>
-        <Image
-          src={imagePath}
-          alt="Card"
-          className={isFlipped ? styles.flipped : ''}
-          width={100}
-          height={150}
-        />
-      </div>
-    );
-  })}
-</div>
+            return (
+              <div key={index} className={styles.card} onClick={() => flipCard(index)}>
+                <Image
+                  src={imagePath}
+                  alt="Card"
+                  className={isFlipped ? styles.flipped : ''}
+                  width={100}
+                  height={150}
+                />
+              </div>
+            );
+          })}
+        </div>
       </div>
     </>
   );
