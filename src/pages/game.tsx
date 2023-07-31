@@ -151,7 +151,7 @@ const Game = () => {
         </div>
         <div>
           <button onClick={changeScoreDisplay}>
-            {scoreDisplay ? 'スコアを隠す' : 'スコアを表示する'}
+            {scoreDisplay ? 'スコアを隠す' : 'スコアを表示'}
           </button>
         </div>
         {isMismatchModalOpen && (
