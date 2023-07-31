@@ -45,6 +45,10 @@ const Game = () => {
     }
   }, [matchedCards, pairs]);
 
+  useEffect(() => {
+    setIsEndModalOpen(false);
+  }, []);
+
   const generateCardId = (index: number): number => {
     // カードIDを生成するロジック（例：1からpairsまでの連番）
     return index % pairs + 1;
@@ -142,7 +146,7 @@ const Game = () => {
           <p>{playerNames[currentPlayerIndex]}</p>
         </div>
         <div className={styles.playerNames}>
-          <h2>Player Names:</h2>
+          <h2>Players:</h2>
           {playerNames.map((name, index) => (
             <p key={index}>
               {name} (Score: {getScoreText(playerScores[index])})
@@ -165,7 +169,16 @@ const Game = () => {
         {isEndModalOpen && (
           <div className={styles.modal}>
             <div className={styles.modalContent}>
-              <h2>Winner: {playerNames[playerScores.indexOf(Math.max(...playerScores))]}</h2>
+              {(() => {
+                const maxScore = Math.max(...playerScores);
+                const winners = playerNames.filter((_, index) => playerScores[index] === maxScore);
+
+                if (winners.length === playerNames.length) {
+                  return <h2>Draw...</h2>;
+                }
+
+                return <h2>Winner: {winners.join(", ")}</h2>;
+              })()}
               <button onClick={resetGame}>同じ設定で遊ぶ</button>
               <Link href="/config">
                 <button>設定を変更する</button>
