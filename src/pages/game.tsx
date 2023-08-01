@@ -22,11 +22,10 @@ const Game = () => {
     // ゲームデータをローカルストレージから取得
     const gameData = localStorage.getItem('gameData');
     if (gameData) {
-      const { numPlayers, numPairs, includeJoker, playerNames, selectedImages } = JSON.parse(gameData);
+      const { numPlayers, numPairs, includeJoker, playerNames } = JSON.parse(gameData);
       setPlayerNames(playerNames);
       setPairs(numPairs);
       setIncludeJoker(includeJoker);
-      setSelectedImages(selectedImages.map((file: File) => URL.createObjectURL(file)));
     }
   }, []);
 
