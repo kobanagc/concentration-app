@@ -1,25 +1,14 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import styles from '@/styles/Config.module.css';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 const Config = () => {
   const [numPlayers, setNumPlayers] = useState<number>(2);
   const [includeJoker, setIncludeJoker] = useState<boolean>(false);
   const [numPairs, setNumPairs] = useState<number>(20);
   const [playerNames, setPlayerNames] = useState<string[]>(numPlayers ? Array(numPlayers).fill('') : []);
-  const [selectedImages, setSelectedImages] = useState<File[]>([]);
-  const [uploadError, setUploadError] = useState<string>('');
   const router = useRouter();
-
-  useEffect(() => {
-    // ファイルのアップロード数が制限を超えた場合、Start Gameボタンを非活性にする
-    if (selectedImages.length !== 0 && selectedImages.length !== getValidUploadCount()) {
-      setUploadError(`ファイルをアップロードする場合は ${getValidUploadCount()} 枚をアップロードしてください。`);
-    } else {
-      setUploadError('');
-    }
-  }, [selectedImages, includeJoker, numPairs]);
 
   const handleNumPlayersChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(event.target.value);
@@ -45,23 +34,14 @@ const Config = () => {
     });
   };
 
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (files) {
-      const fileList = Array.from(files);
-      setSelectedImages(fileList);
-    }
-  };
-
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     // プレイ画面に遷移する処理を追加
     const formData = {
       numPlayers,
       includeJoker,
-      numPairs: selectedImages.length === 0 ? 20 : numPairs,
+      numPairs,
       playerNames,
-      selectedImages,
     };
     localStorage.setItem('gameData', JSON.stringify(formData));
 
@@ -71,11 +51,6 @@ const Config = () => {
       alert('プレイヤー数は2人以上を選択してください。');
       return;
     }
-  };
-
-  // ファイルのアップロード数の制限を取得する関数
-  const getValidUploadCount = (): number => {
-    return includeJoker ? numPairs + 1 : numPairs;
   };
 
   return (
@@ -135,22 +110,9 @@ const Config = () => {
             </label>
           ))}
 
-          <h2 className={styles.subtitle}>Card Images:</h2>
-          <input
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={handleImageUpload}
-            className={styles.fileInput}
-          />
-
-          <button type="submit" className={styles.button} disabled={uploadError !== ''}>
+          <button type="submit" className={styles.button}>
             Start Game
           </button>
-          {uploadError && <p className={styles.error}>{uploadError}</p>}
-          {selectedImages.length === 0 && (
-            <p className={styles.info}>画像がアップロードされなければペア数は20枚として設定されます。</p>
-          )}
         </form>
       </div>
     </>
