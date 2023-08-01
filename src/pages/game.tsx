@@ -8,7 +8,6 @@ const Game = () => {
   const [playerNames, setPlayerNames] = useState<string[]>([]);
   const [pairs, setPairs] = useState<number>(0);
   const [includeJoker, setIncludeJoker] = useState<boolean>(false);
-  const [selectedImages, setSelectedImages] = useState<string[]>([]);
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState<number>(0);
   const [flippedCards, setFlippedCards] = useState<number[]>([]);
   const [matchedCards, setMatchedCards] = useState<number[]>([]);
