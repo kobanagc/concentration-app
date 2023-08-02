@@ -53,8 +53,7 @@ const Game = () => {
   };
 
   const getCardImagePath = (cardId: number): string => {
-    const cardNumber = includeJoker ? cardId + 1 : cardId;
-    return `/card${cardNumber}.png`;
+    return `/card${cardId}.png`;
   };
 
   function shuffleArray<T>(array: T[]): T[] {
