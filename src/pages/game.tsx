@@ -33,29 +33,34 @@ const Game = () => {
     setPlayerScores(Array(playerNames.length).fill(0));
   }, [playerNames]);
 
+  // pairsが変更されたら、新たにシャッフルされたカードIDの配列を作成
   useEffect(() => {
     setCardIds(shuffleArray(Array(pairs * 2).fill(0).map((_, index) => generateCardId(index))));
   }, [pairs]);
 
+  // 全てのカードがマッチしていればゲーム終了のモーダルを表示
   useEffect(() => {
     if (matchedCards.length === pairs * 2) {
       setIsEndModalOpen(true);
     }
   }, [matchedCards, pairs]);
 
+  // 初回ロード時、ゲーム終了のモーダルを閉じる（初期設定） ※この位置じゃないと最初からモーダルが表示されてしまう。
   useEffect(() => {
     setIsEndModalOpen(false);
   }, []);
 
+  // カードIDを生成（1からpairsまでの連番）
   const generateCardId = (index: number): number => {
-    // カードIDを生成するロジック（例：1からpairsまでの連番）
     return index % pairs + 1;
   };
 
+  // カードIDに対応する画像パスを取得
   const getCardImagePath = (cardId: number): string => {
     return `/card${cardId}.png`;
   };
 
+  // 配列をシャッフルする関数
   function shuffleArray<T>(array: T[]): T[] {
     const result = [...array];
     for (let i = result.length - 1; i > 0; i--) {
@@ -65,36 +70,45 @@ const Game = () => {
     return result;
   }
 
+  // カードを反転（選択）する処理
   const flipCard = (index: number) => {
+    // すでにマッチしたカードを選択した場合は何もしない。
     if (matchedCards.includes(index)) {
       return;
     }
+    // 既に2枚選択されている場合も何もしない。
     if (flippedCards.length === 2) {
       return;
     }
+    // あるいは同じカードを選んだ場合は何もしない。
     if (flippedCards.includes(index)) {
       return;
     }
+    // 選択したカードを反転（選択）したカードのリストに追加
     setFlippedCards((prevCards) => [...prevCards, index]);
 
+    // 2枚目のカードを選択した場合
     if (flippedCards.length === 1) {
       const firstCardIndex = flippedCards[0];
       const firstCardId = cardIds[firstCardIndex];
       const currentCardId = cardIds[index];
 
+      // 選んだ2枚のカードが一致していたら
       if (firstCardId === currentCardId) {
-        setMatchedCards((prevCards) => [...prevCards, firstCardIndex, index]);
-        setFlippedCards([]);
+        setMatchedCards((prevCards) => [...prevCards, firstCardIndex, index]); // 一致したカードのリストに追加
+        setFlippedCards([]); // 反転（選択）したカードのリストを空に
+
         // スコアを更新
         const newPlayerScores = [...playerScores];
         newPlayerScores[currentPlayerIndex]++;
         setPlayerScores(newPlayerScores);
-      } else {
+      } else { // 一致していなければ
         setIsMismatchModalOpen(true); // モーダルを表示する
       }
     }
   };
 
+  // 不一致のモーダルを閉じる処理（カードを戻し、次のプレイヤーへ）
   const closeMismatchModal = () => {
     setFlippedCards([]);
     setIsMismatchModalOpen(false);
@@ -102,6 +116,7 @@ const Game = () => {
     setCurrentPlayerIndex(nextPlayerIndex);
   };
 
+   // スコア表示のテキストを取得
   const getScoreText = (score: number): string => {
     if (scoreDisplay === false) {
       return '???';
@@ -119,6 +134,10 @@ const Game = () => {
     setScoreDisplay((prevDisplay) => !prevDisplay);
   };
 
+  // ゲームをリセットする関数。
+  // 新しいカードの並びを設定し、現在のプレイヤーを0番目にする。
+  // また、flippedCards、matchedCardsを初期化し、スコアも全員0に戻す。
+  // モーダルの表示も全て閉じる。
   const resetGame = () => {
     const newCardIds = shuffleArray(Array(pairs * 2).fill(0).map((_, index) => generateCardId(index)));
     setCardIds(newCardIds);
