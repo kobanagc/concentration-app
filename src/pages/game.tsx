@@ -122,11 +122,11 @@ const Game = () => {
       return '???';
     }
     if (score === 0) {
-      return '0 pair';
+      return '0 point';
     } else if (score === 1) {
-      return `${score} pair`;
+      return `${score} point`;
     } else {
-      return `${score} pairs`;
+      return `${score} points`;
     }
   };
 
