@@ -9,6 +9,7 @@ const Config = () => {
   const [numPairs, setNumPairs] = useState<number>(20);
   const [playerNames, setPlayerNames] = useState<string[]>(numPlayers ? Array(numPlayers).fill('') : []);
   const router = useRouter();
+  const numPairsOptions = [20, 30, 40, 50];
 
   const handleNumPlayersChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(event.target.value);
@@ -87,13 +88,20 @@ const Config = () => {
 
           <label>
             Number of Pairs:
-            <input
-              type="number"
-              value={numPairs}
-              onChange={(event) => setNumPairs(parseInt(event.target.value))}
-              min="10"
-              className={styles.input}
-            />
+            {numPairsOptions.map((npo) => (
+              <>
+                <input
+                  key={npo}
+                  type="radio"
+                  name="numPairs"
+                  value={npo}
+                  defaultChecked={npo === 20}
+                  onChange={(event) => setNumPairs(npo)}
+                  className={styles.input}
+                />
+                {npo}
+              </>
+            ))}
           </label>
 
           <h2 className={styles.subtitle}>Player Names:</h2>
