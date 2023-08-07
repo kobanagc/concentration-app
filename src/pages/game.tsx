@@ -22,9 +22,9 @@ const Game = () => {
     const gameData = localStorage.getItem('gameData');
     if (gameData) {
       const { numPlayers, numPairs, includeJoker, playerNames } = JSON.parse(gameData);
+      setIncludeJoker(includeJoker);
       setPlayerNames(playerNames);
       setPairs(numPairs);
-      setIncludeJoker(includeJoker);
     }
   }, []);
 
@@ -35,7 +35,11 @@ const Game = () => {
 
   // pairsが変更されたら、新たにシャッフルされたカードIDの配列を作成
   useEffect(() => {
-    setCardIds(shuffleArray(Array(pairs * 2).fill(0).map((_, index) => generateCardId(index))));
+    if (includeJoker) {
+      setCardIds(chooseJoker(shuffleArray(Array((pairs + 1) * 2).fill(0).map((_, index) => generateCardId(index)))));
+    } else {
+      setCardIds(shuffleArray(Array(pairs * 2).fill(0).map((_, index) => generateCardId(index))));
+    }
   }, [pairs]);
 
   // 全てのカードがマッチしていればゲーム終了のモーダルを表示
@@ -52,6 +56,9 @@ const Game = () => {
 
   // カードIDを生成（1からpairsまでの連番）
   const generateCardId = (index: number): number => {
+    if (includeJoker) {
+      return index % (pairs + 1) + 1;
+    }
     return index % pairs + 1;
   };
 
@@ -70,6 +77,17 @@ const Game = () => {
     return result;
   }
 
+  // ランダムにジョーカーを選出
+  function chooseJoker(arr: number[]): number[] {
+    // 配列のコピーを作成する
+    const newArr = [...arr];
+    // ランダムなインデックスを生成する
+    const randomIndex = Math.floor(Math.random() * newArr.length);
+    // そのインデックスの要素を削除する
+    newArr.splice(randomIndex, 1);
+    return newArr;
+  }
+
   // カードを反転（選択）する処理
   const flipCard = (index: number) => {
     // すでにマッチしたカードを選択した場合は何もしない。
@@ -80,7 +98,7 @@ const Game = () => {
     if (flippedCards.length === 2) {
       return;
     }
-    // あるいは同じカードを選んだ場合は何もしない。
+    // 同じカードを選んだ場合も何もしない。
     if (flippedCards.includes(index)) {
       return;
     }
@@ -139,8 +157,11 @@ const Game = () => {
   // また、flippedCards、matchedCardsを初期化し、スコアも全員0に戻す。
   // モーダルの表示も全て閉じる。
   const resetGame = () => {
-    const newCardIds = shuffleArray(Array(pairs * 2).fill(0).map((_, index) => generateCardId(index)));
-    setCardIds(newCardIds);
+    if (includeJoker) {
+      setCardIds(chooseJoker(shuffleArray(Array((pairs + 1) * 2).fill(0).map((_, index) => generateCardId(index)))));
+    } else {
+      setCardIds(shuffleArray(Array(pairs * 2).fill(0).map((_, index) => generateCardId(index))));
+    }
     setCurrentPlayerIndex(0);
     setFlippedCards([]);
     setMatchedCards([]);
