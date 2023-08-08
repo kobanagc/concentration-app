@@ -16,13 +16,15 @@ const Game = () => {
   const [playerScores, setPlayerScores] = useState<number[]>([]);
   const [scoreDisplay, setScoreDisplay] = useState<boolean>(true);
   const [cardIds, setCardIds] = useState<number[]>([]);
+  const [numOfDuplicates, setNumOfDuplicates] = useState<number>(0);
 
   useEffect(() => {
     // ゲームデータをローカルストレージから取得
     const gameData = localStorage.getItem('gameData');
     if (gameData) {
-      const { numPlayers, numPairs, includeJoker, playerNames } = JSON.parse(gameData);
+      const { numPlayers, numPairs, includeJoker, isHardMode, playerNames } = JSON.parse(gameData);
       setIncludeJoker(includeJoker);
+      setNumOfDuplicates(isHardMode ? 3 : 2);
       setPlayerNames(playerNames);
       setPairs(numPairs);
     }
@@ -36,15 +38,15 @@ const Game = () => {
   // pairsが変更されたら、新たにシャッフルされたカードIDの配列を作成
   useEffect(() => {
     if (includeJoker) {
-      setCardIds(chooseJoker(shuffleArray(Array((pairs + 1) * 2).fill(0).map((_, index) => generateCardId(index)))));
+      setCardIds(chooseJoker(shuffleArray(Array((pairs + 1) * numOfDuplicates).fill(0).map((_, index) => generateCardId(index)))));
     } else {
-      setCardIds(shuffleArray(Array(pairs * 2).fill(0).map((_, index) => generateCardId(index))));
+      setCardIds(shuffleArray(Array(pairs * numOfDuplicates).fill(0).map((_, index) => generateCardId(index))));
     }
   }, [pairs]);
 
   // 全てのカードがマッチしていればゲーム終了のモーダルを表示
   useEffect(() => {
-    if (matchedCards.length === pairs * 2) {
+    if (matchedCards.length === pairs * numOfDuplicates) {
       setIsEndModalOpen(true);
     }
   }, [matchedCards, pairs]);
@@ -95,7 +97,7 @@ const Game = () => {
       return;
     }
     // 既に2枚選択されている場合も何もしない。
-    if (flippedCards.length === 2) {
+    if (flippedCards.length === numOfDuplicates) {
       return;
     }
     // 同じカードを選んだ場合も何もしない。
@@ -106,22 +108,39 @@ const Game = () => {
     setFlippedCards((prevCards) => [...prevCards, index]);
 
     // 2枚目のカードを選択した場合
-    if (flippedCards.length === 1) {
+    if (flippedCards.length === numOfDuplicates - 1) {
       const firstCardIndex = flippedCards[0];
       const firstCardId = cardIds[firstCardIndex];
+      const secondCardIndex = flippedCards[1];
+      const secondCardId = cardIds[secondCardIndex];
       const currentCardId = cardIds[index];
 
-      // 選んだ2枚のカードが一致していたら
-      if (firstCardId === currentCardId) {
-        setMatchedCards((prevCards) => [...prevCards, firstCardIndex, index]); // 一致したカードのリストに追加
-        setFlippedCards([]); // 反転（選択）したカードのリストを空に
+      if (numOfDuplicates === 2) {
+        // 選んだ2枚のカードが一致していたら
+        if (firstCardId === currentCardId) {
+          setMatchedCards((prevCards) => [...prevCards, firstCardIndex, index]); // 一致したカードのリストに追加
+          setFlippedCards([]); // 反転（選択）したカードのリストを空に
 
-        // スコアを更新
-        const newPlayerScores = [...playerScores];
-        newPlayerScores[currentPlayerIndex]++;
-        setPlayerScores(newPlayerScores);
-      } else { // 一致していなければ
-        setIsMismatchModalOpen(true); // モーダルを表示する
+          // スコアを更新
+          const newPlayerScores = [...playerScores];
+          newPlayerScores[currentPlayerIndex]++;
+          setPlayerScores(newPlayerScores);
+        } else { // 一致していなければ
+          setIsMismatchModalOpen(true); // モーダルを表示する
+        }
+      } else if (numOfDuplicates === 3) {
+        // 選んだ3枚のカードが一致していたら
+        if (firstCardId === currentCardId && secondCardId === currentCardId) {
+          setMatchedCards((prevCards) => [...prevCards, firstCardIndex, secondCardIndex, index]); // 一致したカードのリストに追加
+          setFlippedCards([]); // 反転（選択）したカードのリストを空に
+
+          // スコアを更新
+          const newPlayerScores = [...playerScores];
+          newPlayerScores[currentPlayerIndex]++;
+          setPlayerScores(newPlayerScores);
+        } else { // 一致していなければ
+          setIsMismatchModalOpen(true); // モーダルを表示する
+        }
       }
     }
   };
@@ -158,9 +177,9 @@ const Game = () => {
   // モーダルの表示も全て閉じる。
   const resetGame = () => {
     if (includeJoker) {
-      setCardIds(chooseJoker(shuffleArray(Array((pairs + 1) * 2).fill(0).map((_, index) => generateCardId(index)))));
+      setCardIds(chooseJoker(shuffleArray(Array((pairs + 1) * numOfDuplicates).fill(0).map((_, index) => generateCardId(index)))));
     } else {
-      setCardIds(shuffleArray(Array(pairs * 2).fill(0).map((_, index) => generateCardId(index))));
+      setCardIds(shuffleArray(Array(pairs * numOfDuplicates).fill(0).map((_, index) => generateCardId(index))));
     }
     setCurrentPlayerIndex(0);
     setFlippedCards([]);

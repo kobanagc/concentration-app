@@ -6,10 +6,11 @@ import { useState } from 'react';
 const Config = () => {
   const [numPlayers, setNumPlayers] = useState<number>(2);
   const [includeJoker, setIncludeJoker] = useState<boolean>(false);
-  const [numPairs, setNumPairs] = useState<number>(20);
+  const [numPairs, setNumPairs] = useState<number>(10);
   const [playerNames, setPlayerNames] = useState<string[]>(numPlayers ? Array(numPlayers).fill('') : []);
+  const [isHardMode, setIsHardMode] = useState<boolean>(false);
   const router = useRouter();
-  const numPairsOptions = [20, 30, 40, 50];
+  const numPairsOptions = [10, 20, 30, 40, 50];
 
   const handleNumPlayersChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(event.target.value);
@@ -41,6 +42,7 @@ const Config = () => {
     const formData = {
       numPlayers,
       includeJoker,
+      isHardMode,
       numPairs,
       playerNames,
     };
@@ -95,13 +97,23 @@ const Config = () => {
                   type="radio"
                   name="numPairs"
                   value={npo}
-                  defaultChecked={npo === 20}
+                  defaultChecked={npo === 10}
                   onChange={(event) => setNumPairs(npo)}
                   className={styles.input}
                 />
                 {npo}
               </>
             ))}
+          </label>
+
+          <label>
+            Hard Mode:
+            <input
+              type="checkbox"
+              checked={isHardMode}
+              onChange={() => setIsHardMode(!isHardMode)}
+              className={styles.checkbox}
+            />
           </label>
 
           <h2 className={styles.subtitle}>Player Names:</h2>
