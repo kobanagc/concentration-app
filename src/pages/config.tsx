@@ -9,6 +9,8 @@ const Config = () => {
   const [numPairs, setNumPairs] = useState<number>(10);
   const [playerNames, setPlayerNames] = useState<string[]>(numPlayers ? Array(numPlayers).fill('') : []);
   const [isHardMode, setIsHardMode] = useState<boolean>(false);
+  const [isPlayerShuffleModalOpen, setIsPlayerShuffleModalOpen] = useState<boolean>(false);
+  const [isPlayerOrderRandom, setIsPlayerOrderRandom] = useState<boolean>(false);
   const router = useRouter();
   const numPairsOptions = [10, 20, 30, 40, 50];
 
@@ -36,18 +38,17 @@ const Config = () => {
     });
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
+  const handleSubmit = (event?: React.FormEvent, random?: boolean) => {
+    event?.preventDefault();
     // プレイ画面に遷移する処理を追加
     const formData = {
-      numPlayers,
       includeJoker,
       isHardMode,
       numPairs,
       playerNames,
+      isPlayerOrderRandom: random
     };
     localStorage.setItem('gameData', JSON.stringify(formData));
-
     if (numPlayers >= 2 ) {
       router.push('/game');
     } else {
@@ -130,11 +131,30 @@ const Config = () => {
             </label>
           ))}
 
-          <button type="submit" className={styles.button}>
+          <button type="button" onClick={() => setIsPlayerShuffleModalOpen(true)} className={styles.button}>
             Start Game
           </button>
         </form>
       </div>
+      {isPlayerShuffleModalOpen && (
+        <div className={styles.modal}>
+          <div className={styles.modalContent}>
+            <p>順番をシャッフルしますか？</p>
+            <button onClick={() => {
+                setIsPlayerShuffleModalOpen(false);
+                handleSubmit(undefined, true);
+            }}>
+              はい
+            </button>
+            <button onClick={() => {
+                setIsPlayerShuffleModalOpen(false);
+                handleSubmit(undefined, false);
+            }}>
+              いいえ
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 };

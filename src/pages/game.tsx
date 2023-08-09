@@ -17,15 +17,21 @@ const Game = () => {
   const [scoreDisplay, setScoreDisplay] = useState<boolean>(true);
   const [cardIds, setCardIds] = useState<number[]>([]);
   const [numOfDuplicates, setNumOfDuplicates] = useState<number>(0);
+  const [isPlayerOrderRandom, setIsPlayerOrderRandom] = useState<boolean>(false);
 
   useEffect(() => {
     // ゲームデータをローカルストレージから取得
     const gameData = localStorage.getItem('gameData');
     if (gameData) {
-      const { numPlayers, numPairs, includeJoker, isHardMode, playerNames } = JSON.parse(gameData);
+      const { numPairs, includeJoker, isHardMode, playerNames, isPlayerOrderRandom } = JSON.parse(gameData);
+      setIsPlayerOrderRandom(isPlayerOrderRandom);
       setIncludeJoker(includeJoker);
       setNumOfDuplicates(isHardMode ? 3 : 2);
-      setPlayerNames(playerNames);
+      if (isPlayerOrderRandom) {
+        setPlayerNames(shuffleArray(playerNames));
+      } else {
+        setPlayerNames(playerNames);
+      }
       setPairs(numPairs);
     }
   }, []);
@@ -180,6 +186,9 @@ const Game = () => {
       setCardIds(chooseJoker(shuffleArray(Array((pairs + 1) * numOfDuplicates).fill(0).map((_, index) => generateCardId(index)))));
     } else {
       setCardIds(shuffleArray(Array(pairs * numOfDuplicates).fill(0).map((_, index) => generateCardId(index))));
+    }
+    if (isPlayerOrderRandom) {
+      setPlayerNames(shuffleArray(playerNames));
     }
     setCurrentPlayerIndex(0);
     setFlippedCards([]);
