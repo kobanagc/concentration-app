@@ -18,6 +18,7 @@ const Game = () => {
   const [cardIds, setCardIds] = useState<number[]>([]);
   const [numOfDuplicates, setNumOfDuplicates] = useState<number>(0);
   const [isPlayerOrderRandom, setIsPlayerOrderRandom] = useState<boolean>(false);
+  const [isSkipButtonDisplayed, setIsSkipButtonDisplayed] = useState<boolean>(false);
 
   useEffect(() => {
     // ゲームデータをローカルストレージから取得
@@ -113,13 +114,25 @@ const Game = () => {
     // 選択したカードを反転（選択）したカードのリストに追加
     setFlippedCards((prevCards) => [...prevCards, index]);
 
-    // 2枚目のカードを選択した場合
+    // Hard_Modeで2枚目を選択した場合
+    if (numOfDuplicates === 3 && flippedCards.length === 1) {
+      const firstCardIndex = flippedCards[0];
+      const firstCardId = cardIds[firstCardIndex];
+      const currentCardId = cardIds[index];
+      if (firstCardId !== currentCardId) {
+        setIsSkipButtonDisplayed(true);
+      }
+    }
+
+    // 2枚目（Hard_modeは3枚目）のカードを選択した場合
     if (flippedCards.length === numOfDuplicates - 1) {
       const firstCardIndex = flippedCards[0];
       const firstCardId = cardIds[firstCardIndex];
       const secondCardIndex = flippedCards[1];
       const secondCardId = cardIds[secondCardIndex];
       const currentCardId = cardIds[index];
+
+      setIsSkipButtonDisplayed(false);
 
       if (numOfDuplicates === 2) {
         // 選んだ2枚のカードが一致していたら
@@ -157,7 +170,14 @@ const Game = () => {
     setIsMismatchModalOpen(false);
     const nextPlayerIndex = (currentPlayerIndex + 1) % playerNames.length;
     setCurrentPlayerIndex(nextPlayerIndex);
+    setIsSkipButtonDisplayed(false);
   };
+
+  const skipMyTurn = () => {
+    setFlippedCards([]);
+    setCurrentPlayerIndex((currentPlayerIndex + 1) % playerNames.length);
+    setIsSkipButtonDisplayed(false);
+  }
 
    // スコア表示のテキストを取得
   const getScoreText = (score: number): string => {
@@ -223,6 +243,9 @@ const Game = () => {
             {scoreDisplay ? 'スコアを隠す' : 'スコアを表示'}
           </button>
         </div>
+        {isSkipButtonDisplayed && (
+          <button onClick={skipMyTurn}>3枚目をSkipする</button>
+        )}
         {isMismatchModalOpen && (
           <div className={styles.modal}>
             <div className={styles.modalContent}>
