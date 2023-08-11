@@ -12,7 +12,7 @@ const Config = () => {
   const [isPlayerShuffleModalOpen, setIsPlayerShuffleModalOpen] = useState<boolean>(false);
   const [isPlayerOrderRandom, setIsPlayerOrderRandom] = useState<boolean>(false);
   const router = useRouter();
-  const numPairsOptions = [10, 20, 30, 40, 50];
+  const numPairsOptions = [10, 20, 30]; // 50までは画像あり
 
   const handleNumPlayersChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(event.target.value);
