@@ -10,7 +10,6 @@ const Config = () => {
   const [playerNames, setPlayerNames] = useState<string[]>(numPlayers ? Array(numPlayers).fill('') : []);
   const [isHardMode, setIsHardMode] = useState<boolean>(false);
   const [isPlayerShuffleModalOpen, setIsPlayerShuffleModalOpen] = useState<boolean>(false);
-  const [isPlayerOrderRandom, setIsPlayerOrderRandom] = useState<boolean>(false);
   const router = useRouter();
   const numPairsOptions = [10, 20, 30]; // 50までは画像あり
 
