@@ -1,9 +1,9 @@
+/* 共通スタイル */
 .settings {
   max-width: 600px;
   margin: 0 auto;
   padding: 20px;
   text-align: center;
-  background-color: #f7f7f7;
   border-radius: 5px;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -28,7 +28,6 @@
   width: 100%;
   padding: 8px 12px;
   font-size: 16px;
-  border: 1px solid #ddd;
   border-radius: 4px;
   margin-top: 6px;
 }
@@ -37,15 +36,10 @@
   margin-left: 8px;
 }
 
-.fileInput {
-  margin-top: 6px;
-}
-
 .button {
   display: inline-block;
   padding: 10px 20px;
   font-size: 16px;
-  background-color: #4caf50;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -54,5 +48,47 @@
 }
 
 .button:hover {
+  opacity: 0.9;
+}
+
+/* ライトモードのスタイル */
+body:not(.dark-mode) .settings {
+  background-color: #f7f7f7;
+}
+
+body:not(.dark-mode) .input {
+  border: 1px solid #ddd;
+  background-color: #fff;
+}
+
+body:not(.dark-mode) .button {
+  background-color: #4caf50;
+}
+
+body:not(.dark-mode) .button:hover {
+  background-color: #45a049;
+}
+
+/* ダークモードのスタイル */
+body.dark-mode {
+  background-color: #222;
+  color: #ddd;
+}
+
+body.dark-mode .settings {
+  background-color: #333;
+}
+
+body.dark-mode .input {
+  background-color: #444;
+  border: 1px solid #555;
+  color: #ddd;
+}
+
+body.dark-mode .button {
+  background-color: #4caf50;
+}
+
+body.dark-mode .button:hover {
   background-color: #45a049;
 }
