@@ -89,21 +89,25 @@ const Config = () => {
           </label>
 
           <label>
-            Number of Pairs:
-            {numPairsOptions.map((npo) => (
-              <>
-                <input
-                  key={npo}
-                  type="radio"
-                  name="numPairs"
-                  value={npo}
-                  defaultChecked={npo === 10}
-                  onChange={(event) => setNumPairs(npo)}
-                  className={styles.input}
-                />
-                {npo}
-              </>
-            ))}
+            <div>
+              Number of Pairs:
+            </div>
+            <div className={styles.radios}>
+              {numPairsOptions.map((npo) => (
+                <>
+                  {npo}
+                  <input
+                    key={npo}
+                    type="radio"
+                    name="numPairs"
+                    value={npo}
+                    defaultChecked={npo === 10}
+                    onChange={(event) => setNumPairs(npo)}
+                    className={styles.radio}
+                  />
+                </>
+              ))}
+            </div>
           </label>
 
           <label>
