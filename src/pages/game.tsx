@@ -7,7 +7,7 @@ import Link from 'next/link'
 const Game = () => {
   const [playerNames, setPlayerNames] = useState<string[]>([]);
   const [pairs, setPairs] = useState<number>(0);
-  const [includeJoker, setIncludeJoker] = useState<boolean>(false);
+  const [isJokerIncluded, setIsJokerIncluded] = useState<boolean>(false);
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState<number>(0);
   const [flippedCards, setFlippedCards] = useState<number[]>([]);
   const [matchedCards, setMatchedCards] = useState<number[]>([]);
@@ -24,9 +24,9 @@ const Game = () => {
     // ゲームデータをローカルストレージから取得
     const gameData = localStorage.getItem('gameData');
     if (gameData) {
-      const { numPairs, includeJoker, isHardMode, playerNames, isPlayerOrderRandom } = JSON.parse(gameData);
+      const { numPairs, isJokerIncluded, isHardMode, playerNames, isPlayerOrderRandom } = JSON.parse(gameData);
       setIsPlayerOrderRandom(isPlayerOrderRandom);
-      setIncludeJoker(includeJoker);
+      setIsJokerIncluded(isJokerIncluded);
       setNumOfDuplicates(isHardMode ? 3 : 2);
       if (isPlayerOrderRandom) {
         setPlayerNames(shuffleArray(playerNames));
@@ -44,7 +44,7 @@ const Game = () => {
 
   // pairsが変更されたら、新たにシャッフルされたカードIDの配列を作成
   useEffect(() => {
-    if (includeJoker) {
+    if (isJokerIncluded) {
       setCardIds(chooseJoker(shuffleArray(Array((pairs + 1) * numOfDuplicates).fill(0).map((_, index) => generateCardId(index)))));
     } else {
       setCardIds(shuffleArray(Array(pairs * numOfDuplicates).fill(0).map((_, index) => generateCardId(index))));
@@ -65,7 +65,7 @@ const Game = () => {
 
   // カードIDを生成（1からpairsまでの連番）
   const generateCardId = (index: number): number => {
-    if (includeJoker) {
+    if (isJokerIncluded) {
       return index % (pairs + 1) + 1;
     }
     return index % pairs + 1;
@@ -202,7 +202,7 @@ const Game = () => {
   // また、flippedCards、matchedCardsを初期化し、スコアも全員0に戻す。
   // モーダルの表示も全て閉じる。
   const resetGame = () => {
-    if (includeJoker) {
+    if (isJokerIncluded) {
       setCardIds(chooseJoker(shuffleArray(Array((pairs + 1) * numOfDuplicates).fill(0).map((_, index) => generateCardId(index)))));
     } else {
       setCardIds(shuffleArray(Array(pairs * numOfDuplicates).fill(0).map((_, index) => generateCardId(index))));

@@ -1,17 +1,41 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import styles from '@/styles/Config.module.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const Config = () => {
   const [numPlayers, setNumPlayers] = useState<number>(2);
-  const [includeJoker, setIncludeJoker] = useState<boolean>(false);
+  const [isJokerIncluded, setIsJokerIncluded] = useState<boolean>(false);
   const [numPairs, setNumPairs] = useState<number>(10);
   const [playerNames, setPlayerNames] = useState<string[]>(numPlayers ? Array(numPlayers).fill('') : []);
   const [isHardMode, setIsHardMode] = useState<boolean>(false);
   const [isPlayerShuffleModalOpen, setIsPlayerShuffleModalOpen] = useState<boolean>(false);
   const router = useRouter();
   const numPairsOptions = [10, 20, 30]; // 50までは画像あり
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    if (darkModeQuery.matches) {
+      setIsDarkMode(true);
+    }
+
+    const handleChange = (event: MediaQueryListEvent) => {
+      setIsDarkMode(event.matches);
+    };
+
+    darkModeQuery.addEventListener('change', handleChange);
+
+    return () => darkModeQuery.removeEventListener('change', handleChange);
+  }, []);
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.body.classList.add('dark-mode');
+    } else {
+      document.body.classList.remove('dark-mode');
+    }
+  }, [isDarkMode]);
 
   const handleNumPlayersChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(event.target.value);
@@ -41,7 +65,7 @@ const Config = () => {
     event?.preventDefault();
     // プレイ画面に遷移する処理を追加
     const formData = {
-      includeJoker,
+      isJokerIncluded,
       isHardMode,
       numPairs,
       playerNames,
@@ -79,11 +103,11 @@ const Config = () => {
           </label>
 
           <label>
-            Include Joker:
+            Joker:
             <input
               type="checkbox"
-              checked={includeJoker}
-              onChange={() => setIncludeJoker(!includeJoker)}
+              checked={isJokerIncluded}
+              onChange={() => setIsJokerIncluded(!isJokerIncluded)}
               className={styles.checkbox}
             />
           </label>

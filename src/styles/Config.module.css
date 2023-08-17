@@ -63,11 +63,13 @@
 /* ライトモードのスタイル */
 body:not(.dark-mode) .settings {
   background-color: #f7f7f7;
+  color: #111;
 }
 
 body:not(.dark-mode) .input {
   border: 1px solid #ddd;
   background-color: #fff;
+  color: #111;
 }
 
 body:not(.dark-mode) .button {
