@@ -63,6 +63,18 @@ const Config = () => {
 
   const handleSubmit = (event?: React.FormEvent, random?: boolean) => {
     event?.preventDefault();
+    // 名前がスペースだけで構成されているかどうかを確認する
+    const hasOnlySpacesName = playerNames.some(name => /^ *$/.test(name));
+    if (hasOnlySpacesName) {
+      alert('無効なプレイヤー名があります。');
+      return;
+    }
+    if (numPlayers >= 2 ) {
+      router.push('/game');
+    } else {
+      alert('プレイヤー数は2人以上を選択してください。');
+      return;
+    }
     // プレイ画面に遷移する処理を追加
     const formData = {
       isJokerIncluded,
@@ -72,12 +84,6 @@ const Config = () => {
       isPlayerOrderRandom: random
     };
     localStorage.setItem('gameData', JSON.stringify(formData));
-    if (numPlayers >= 2 ) {
-      router.push('/game');
-    } else {
-      alert('プレイヤー数は2人以上を選択してください。');
-      return;
-    }
   };
 
   return (
