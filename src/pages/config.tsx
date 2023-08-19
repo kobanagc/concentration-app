@@ -167,18 +167,20 @@ const Config = () => {
         <div className={styles.modal}>
           <div className={styles.modalContent}>
             <p>順番をシャッフルしますか？</p>
-            <button onClick={() => {
-                setIsPlayerShuffleModalOpen(false);
-                handleSubmit(undefined, true);
-            }}>
-              はい
-            </button>
-            <button onClick={() => {
-                setIsPlayerShuffleModalOpen(false);
-                handleSubmit(undefined, false);
-            }}>
-              いいえ
-            </button>
+            <div>
+              <button onClick={() => {
+                  setIsPlayerShuffleModalOpen(false);
+                  handleSubmit(undefined, true);
+              }}>
+                はい
+              </button>
+              <button onClick={() => {
+                  setIsPlayerShuffleModalOpen(false);
+                  handleSubmit(undefined, false);
+              }}>
+                いいえ
+              </button>
+            </div>
           </div>
         </div>
       )}
