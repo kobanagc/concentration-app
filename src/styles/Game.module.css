@@ -32,3 +32,36 @@
 }
 
 /* 他のスタイルルールを追加できます */
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 200px;
+  background-color: #f7f7f7;
+  color: #111;
+  display: flex;      /* 子要素を中央に配置するための設定 */
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  font-size: 20px;
+}
+
+.modalContent {
+  text-align: center;
+}
+
+.modalContent p {
+  margin-bottom: 40px;
+}
+
+.modalContent div {
+  display: flex;
+  justify-content: center; /* ボタンを中央に配置 */
+  gap: 10px; /* ボタン間の間隔を設定 */
+}
+
+.modalContent button {
+  cursor: pointer;
+}
