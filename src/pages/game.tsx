@@ -267,10 +267,12 @@ const Game = () => {
 
                 return <h2>Winner: {winners.join(", ")}</h2>;
               })()}
-              <button onClick={resetGame}>同じ設定で遊ぶ</button>
-              <Link href="/config">
-                <button>設定を変更する</button>
-              </Link>
+              <div>
+                <button onClick={resetGame}>同じ設定で遊ぶ</button>
+                <Link href="/config">
+                  <button>設定を変更する</button>
+                </Link>
+              </div>
             </div>
           </div>
         )}
