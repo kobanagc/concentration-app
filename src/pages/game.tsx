@@ -242,10 +242,10 @@ const Game = () => {
           <button onClick={changeScoreDisplay}>
             {scoreDisplay ? 'スコアを隠す' : 'スコアを表示'}
           </button>
+          {isSkipButtonDisplayed && (
+            <button onClick={skipMyTurn}>3枚目をSkipする</button>
+          )}
         </div>
-        {isSkipButtonDisplayed && (
-          <button onClick={skipMyTurn}>3枚目をSkipする</button>
-        )}
         {isMismatchModalOpen && (
           <div className={styles.modal}>
             <div className={styles.modalContent}>
