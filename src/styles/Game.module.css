@@ -11,6 +11,11 @@
   /* 他のスタイルプロパティを追加できます */
 }
 
+.playerNames p {
+  display: inline;
+  margin-right: 20px;
+}
+
 .cardGrid {
   display: flex;
   flex-wrap: wrap;
