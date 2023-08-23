@@ -69,7 +69,7 @@
   height: 200px;
   background-color: #f7f7f7;
   color: #111;
-  display: flex;      /* 子要素を中央に配置するための設定 */
+  display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 8px;
@@ -82,8 +82,8 @@
 
 .modalContent div {
   display: flex;
-  justify-content: center; /* ボタンを中央に配置 */
-  gap: 10px; /* ボタン間の間隔を設定 */
+  justify-content: center;
+  gap: 10px;
 }
 
 .modalContent button {
