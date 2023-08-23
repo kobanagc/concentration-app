@@ -123,11 +123,11 @@ const Config = () => {
               Number of Pairs:
             </div>
             <div className={styles.radios}>
-              {numPairsOptions.map((npo) => (
+              {numPairsOptions.map((npo, index) => (
                 <>
                   {npo}
                   <input
-                    key={npo}
+                    key={index}
                     type="radio"
                     name="numPairs"
                     value={npo}
