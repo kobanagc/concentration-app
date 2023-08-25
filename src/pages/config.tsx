@@ -94,7 +94,7 @@ const Config = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <div className={styles.settings}>
-        <h1 className={styles.title}>Settings</h1>
+        <h1 className={styles.title}>Config</h1>
         <form onSubmit={handleSubmit}>
           <label>
             Number of Players:
