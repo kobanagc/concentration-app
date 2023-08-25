@@ -26,6 +26,7 @@
   margin: 10px;
   border: 2px solid #ddd;
   border-radius: 10px;
+  cursor: pointer;
 }
 
 .card img {
@@ -66,4 +67,17 @@
 
 .modalContent button {
   cursor: pointer;
+}
+
+.enlargedCard {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(2);
+  background-color: #f7f7f7;
+  color: #111;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  font-size: 20px;
 }

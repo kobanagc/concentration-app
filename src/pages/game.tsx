@@ -19,6 +19,7 @@ const Game = () => {
   const [numOfDuplicates, setNumOfDuplicates] = useState<number>(0);
   const [isPlayerOrderRandom, setIsPlayerOrderRandom] = useState<boolean>(false);
   const [isSkipButtonDisplayed, setIsSkipButtonDisplayed] = useState<boolean>(false);
+  const [enlargedImageSrc, setEnlargedImageSrc] = useState<string>('');
 
   useEffect(() => {
     // ゲームデータをローカルストレージから取得
@@ -145,7 +146,9 @@ const Game = () => {
           newPlayerScores[currentPlayerIndex]++;
           setPlayerScores(newPlayerScores);
         } else { // 一致していなければ
-          setIsMismatchModalOpen(true); // モーダルを表示する
+          setTimeout(() => {
+            setIsMismatchModalOpen(true); // モーダルを表示する
+          }, 100);
         }
       } else if (numOfDuplicates === 3) {
         // 選んだ3枚のカードが一致していたら
@@ -158,7 +161,9 @@ const Game = () => {
           newPlayerScores[currentPlayerIndex]++;
           setPlayerScores(newPlayerScores);
         } else { // 一致していなければ
-          setIsMismatchModalOpen(true); // モーダルを表示する
+          setTimeout(() => {
+            setIsMismatchModalOpen(true); // モーダルを表示する
+          }, 100);
         }
       }
     }
@@ -195,6 +200,12 @@ const Game = () => {
 
   const changeScoreDisplay = () => {
     setScoreDisplay((prevDisplay) => !prevDisplay);
+  };
+
+  const handleImageClick = (src: string) => {
+    if (src !== '/mark_question.png' && isMismatchModalOpen === false && isEndModalOpen === false) {
+      setEnlargedImageSrc(src);
+    }
   };
 
   // ゲームをリセットする関数。
@@ -249,7 +260,7 @@ const Game = () => {
         {isMismatchModalOpen && (
           <div className={styles.modal}>
             <div className={styles.modalContent}>
-              <p>ざんね〜んm9(^Д^)</p>
+              <p>You missed...</p>
               <button onClick={closeMismatchModal}>カードを戻す</button>
             </div>
           </div>
@@ -290,11 +301,18 @@ const Game = () => {
                   className={isFlipped ? styles.flipped : ''}
                   width={100}
                   height={150}
+                  onClick={() => handleImageClick(imagePath)}
                 />
               </div>
             );
           })}
         </div>
+        {enlargedImageSrc && (
+          <div className={styles.enlargedCard}>
+            <img src={enlargedImageSrc} alt="Enlarged" />
+            <button onClick={() => setEnlargedImageSrc('')}>Close</button>
+          </div>
+        )}
       </div>
     </>
   );
