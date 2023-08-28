@@ -57,7 +57,7 @@ const Game = () => {
     if (matchedCards.length === pairs * numOfDuplicates) {
       setIsEndModalOpen(true);
     }
-  }, [matchedCards, pairs]);
+  }, [matchedCards, pairs, numOfDuplicates]);
 
   // 初回ロード時、ゲーム終了のモーダルを閉じる（初期設定） ※この位置じゃないと最初からモーダルが表示されてしまう。
   useEffect(() => {
@@ -309,7 +309,7 @@ const Game = () => {
         </div>
         {enlargedImageSrc && (
           <div className={styles.enlargedCard}>
-            <img src={enlargedImageSrc} alt="Enlarged" />
+            <Image src={enlargedImageSrc} alt="Enlarged" />
             <button onClick={() => setEnlargedImageSrc('')}>Close</button>
           </div>
         )}
