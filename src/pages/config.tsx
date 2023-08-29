@@ -97,7 +97,7 @@ const Config = () => {
         <h1 className={styles.title}>Config</h1>
         <form onSubmit={handleSubmit}>
           <label>
-            Number of Players:
+            <h2 className={styles.subtitle}>Number of Players:</h2>
             <input
               type="number"
               value={numPlayers}
@@ -109,7 +109,7 @@ const Config = () => {
           </label>
 
           <label>
-            Joker:
+            <h2 className={styles.subtitle}>Joker:</h2>
             <input
               type="checkbox"
               checked={isJokerIncluded}
@@ -119,9 +119,7 @@ const Config = () => {
           </label>
 
           <label>
-            <div>
-              Number of Pairs:
-            </div>
+            <h2 className={styles.subtitle}>Number of Pairs:</h2>
             <div className={styles.radios}>
               {numPairsOptions.map((npo, index) => (
                 <>
@@ -141,7 +139,7 @@ const Config = () => {
           </label>
 
           <label>
-            Hard Mode:
+          <h2 className={styles.subtitle}>Hard Mode:</h2>
             <input
               type="checkbox"
               checked={isHardMode}
