@@ -86,6 +86,11 @@ const Config = () => {
     localStorage.setItem('gameData', JSON.stringify(formData));
   };
 
+  const handleShuffleConfirmation = (shouldShuffle: boolean) => {
+    setIsPlayerShuffleModalOpen(false);
+    handleSubmit(undefined, shouldShuffle);
+  };
+
   return (
     <>
       <Head>
@@ -122,7 +127,7 @@ const Config = () => {
             <h2 className={styles.subtitle}>Number of Pairs</h2>
             <div className={styles.radios}>
               {numPairsOptions.map((npo, index) => (
-                <>
+                <div key={index}>
                   {npo}
                   <input
                     key={index}
@@ -133,7 +138,7 @@ const Config = () => {
                     onChange={(event) => setNumPairs(npo)}
                     className={styles.radio}
                   />
-                </>
+                </div>
               ))}
             </div>
           </label>
@@ -172,18 +177,8 @@ const Config = () => {
           <div className={styles.modalContent}>
             <p>順番をシャッフルしますか？</p>
             <div>
-              <button onClick={() => {
-                  setIsPlayerShuffleModalOpen(false);
-                  handleSubmit(undefined, true);
-              }}>
-                はい
-              </button>
-              <button onClick={() => {
-                  setIsPlayerShuffleModalOpen(false);
-                  handleSubmit(undefined, false);
-              }}>
-                いいえ
-              </button>
+              <button onClick={() => handleShuffleConfirmation(true)}>はい</button>
+              <button onClick={() => handleShuffleConfirmation(false)}>いいえ</button>
             </div>
           </div>
         </div>
