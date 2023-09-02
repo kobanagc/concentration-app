@@ -3,14 +3,11 @@ import { useRouter } from 'next/router';
 import styles from '@/styles/Config.module.css';
 import { useState, useEffect } from 'react';
 
-// useStateを使用して初期化するとき、配列やオブジェクトなどの複雑な状態を初期化するときにはコンポーネント外で行う
-const initialPlayerNames = (numPlayers: number) => Array(numPlayers).fill('');
-
 const Config = () => {
   const [numPlayers, setNumPlayers] = useState<number>(2);
   const [isJokerIncluded, setIsJokerIncluded] = useState<boolean>(false);
   const [numPairs, setNumPairs] = useState<number>(10);
-  const [playerNames, setPlayerNames] = useState<string[]>(initialPlayerNames(numPlayers));
+  const [playerNames, setPlayerNames] = useState<string[]>(numPlayers ? Array(numPlayers).fill('') : []);
   const [isHardMode, setIsHardMode] = useState<boolean>(false);
   const [isPlayerShuffleModalOpen, setIsPlayerShuffleModalOpen] = useState<boolean>(false);
   const router = useRouter();
