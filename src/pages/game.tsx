@@ -309,7 +309,12 @@ const Game = () => {
         </div>
         {enlargedImageSrc && (
           <div className={styles.enlargedCard}>
-            <Image src={enlargedImageSrc} alt="Enlarged" />
+            <Image
+              src={enlargedImageSrc}
+              alt="Enlarged"
+              width={300}
+              height={300}
+            />
             <button onClick={() => setEnlargedImageSrc('')}>Close</button>
           </div>
         )}
