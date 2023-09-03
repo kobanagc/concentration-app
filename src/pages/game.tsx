@@ -3,6 +3,7 @@ import { HeadComponent } from '@/components/HeadComponent';
 import Image from 'next/image';
 import styles from '@/styles/Game.module.css';
 import Link from 'next/link'
+import path from 'path';
 
 const Game = () => {
   const [playerNames, setPlayerNames] = useState<string[]>([]);
@@ -62,6 +63,11 @@ const Game = () => {
   // 初回ロード時、ゲーム終了のモーダルを閉じる（初期設定） ※この位置じゃないと最初からモーダルが表示されてしまう。
   useEffect(() => {
     setIsEndModalOpen(false);
+  }, []);
+
+  // ページが読み込まれた時にカード画像を読み込む
+  useEffect(() => {
+    path.join(process.cwd(), 'public');
   }, []);
 
   // カードIDを生成（1からpairsまでの連番）
